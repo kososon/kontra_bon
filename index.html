@@ -44,9 +44,9 @@
                 box-sizing: border-box;
             }
 
-            /* Atur ulang ukuran halaman ke A4 Lanskap dengan margin 1cm */
+            /* Atur ulang ukuran halaman ke 9.5in x 5.5in Lanskap */
             @page {
-                size: A4 landscape;
+                size: 24.13cm 13.97cm landscape;
                 margin: 1cm;
             }
 
@@ -56,17 +56,17 @@
                 width: 100%;
             }
 
-            /* Ukuran font ditingkatkan 1pt */
+            /* Ukuran font ditingkatkan menjadi 12pt untuk keterbacaan yang lebih baik */
             .print-area th, .print-area td {
                 border: 1px solid #000 !important;
-                padding: 4px 6px;
+                padding: 3px 5px; /* Sedikit dikurangi agar muat */
                 vertical-align: top;
-                font-size: 11pt; /* Ditingkatkan dari 10pt */
+                font-size: 12pt;
             }
 
             .print-area th {
                 background-color: #f2f2f2;
-                font-size: 11pt; /* Ditingkatkan dari 10pt */
+                font-size: 12pt;
             }
 
             /* Hapus margin dan padding dari elemen teks di dalam print-area */
@@ -124,7 +124,7 @@
             </div>
 
             <div id="kontra-bon-container" class="hidden">
-                <h3 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Faktur untuk <span id="selected-customer-name"></span> di <span id="selected-store-name"></span></h3>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 mt-8">Faktur <span id="selected-customer-name"></span> / <span id="selected-store-name"></span></h3>
                 
                 <div class="overflow-x-auto bg-gray-50 rounded-lg shadow-inner">
                     <table class="min-w-full divide-y divide-gray-200" id="invoices-table">
@@ -157,12 +157,11 @@
                 </div>
             </div>
             
+            <div class="text-center text-gray-500 text-sm mt-4">
+                Design by : Wilson Susanto
+            </div>
         </div>
         
-        <!-- Kredit di bagian bawah -->
-        <div class="text-center text-gray-500 text-sm mt-4">
-            Design by : Wilson Susanto
-        </div>
     </div>
     
     <!-- Area pratinjau cetak yang tersembunyi -->
@@ -174,7 +173,8 @@
                     <h2 style="font-size: 13pt;" class="font-bold mt-1">KONTRA BON</h2>
                 </div>
                 <div class="text-right">
-                    <p id="print-customer-name" class="font-semibold"></p>
+                    <!-- Updated line below to include font-size and font-bold styles -->
+                    <p id="print-customer-name" class="font-bold" style="font-size: 13pt;"></p>
                 </div>
             </div>
         </section>
@@ -270,12 +270,12 @@
             setInterval(updateClock, 1000);
             updateClock(); // Panggil sekali saat dimuat untuk menghindari jeda awal
 
-            // Fungsi untuk membersihkan string dari karakter non-numerik
+            // Fungsi untuk membersihkan string dari karakter non-numerik, kecuali titik
             const cleanNumberString = (str) => {
-                if (typeof str === 'number') return str;
-                if (typeof str !== 'string') return '';
-                // Menggunakan ekspresi reguler yang lebih spesifik untuk mengizinkan angka dan titik desimal
-                return str.replace(/[^0-9.]/g, '');
+                if (typeof str === 'number') return String(str);
+                if (typeof str !== 'string') return '0';
+                // Replace comma with dot for decimal and remove other non-numeric chars
+                return str.replace(/,/, '.').replace(/[^0-9.]/g, '');
             };
 
             // Fungsi untuk menampilkan notifikasi
@@ -424,7 +424,6 @@
             invoicesBody.addEventListener('change', (e) => {
                 if (e.target.classList.contains('invoice-checkbox')) {
                     const checkbox = e.target;
-                    // FIX: Changed from 'invoice-no' to 'invoiceNo' to match JS camelCase convention for dataset
                     const invoiceNo = checkbox.dataset.invoiceNo; 
                     const invoice = allInvoicesData.find(inv => inv.invoiceNo === invoiceNo);
 
