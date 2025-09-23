@@ -42,12 +42,13 @@
                 padding: 0;
                 margin: 0;
                 box-sizing: border-box;
-                /* Menyesuaikan skala cetak menjadi 95% */
+                /* Menyesuaikan skala cetak menjadi 95% untuk memastikan semua konten muat */
                 transform: scale(0.95);
                 transform-origin: top left;
             }
 
             /* Atur ulang ukuran halaman ke 9.5in x 5.5in Lanskap */
+            /* Ini adalah bagian terpenting untuk Continuous Form */
             @page {
                 size: 24.13cm 13.97cm landscape;
                 margin: 1cm;
@@ -399,6 +400,7 @@
                 );
 
                 // Sort invoices by invoice date in ascending order
+                // This converts the 'dd/mm/yyyy' date string to a valid Date object for comparison
                 filteredInvoices.sort((a, b) => {
                     const dateA = new Date(a.invoiceDate.split('/').reverse().join('-'));
                     const dateB = new Date(b.invoiceDate.split('/').reverse().join('-'));
@@ -445,6 +447,7 @@
                 selectedTotal.textContent = formatRupiah(total);
             };
 
+            // Fungsi untuk memformat angka menjadi format Rupiah (Rp)
             const formatRupiah = (number) => {
                 return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
             };
@@ -528,7 +531,7 @@
                 
                 printTableBody.innerHTML = '';
                 let total = 0;
-                // Sort the selected invoices by invoice date for printing
+                // Urutkan faktur yang dipilih berdasarkan tanggal faktur
                 selectedInvoices.sort((a, b) => {
                     const dateA = new Date(a.invoiceDate.split('/').reverse().join('-'));
                     const dateB = new Date(b.invoiceDate.split('/').reverse().join('-'));
@@ -541,7 +544,7 @@
                     row.innerHTML = `
                         <td class="border border-gray-400 p-2 text-center whitespace-nowrap">${index + 1}</td>
                         <td class="border border-gray-400 p-2 text-center whitespace-nowrap">${item.invoiceNo}</td>
-                        <td class="border border-gray-400 p-2 text-center whitespace-nowap">${item.invoiceDate}</td>
+                        <td class="border border-gray-400 p-2 text-center whitespace-nowrap">${item.invoiceDate}</td>
                         <td class="border border-gray-400 p-2 text-center whitespace-nowrap">${item.dueDate}</td>
                         <td class="border border-gray-400 p-2 text-center whitespace-nowrap">${item.top}</td>
                         <td class="border border-gray-400 p-2 text-right whitespace-nowrap">${formatRupiah(item.nominal)}</td>
